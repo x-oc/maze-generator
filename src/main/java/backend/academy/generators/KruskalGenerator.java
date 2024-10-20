@@ -2,12 +2,9 @@ package backend.academy.generators;
 
 import backend.academy.Cell;
 import backend.academy.Maze;
-import backend.academy.MazeRenderer;
-import backend.academy.Renderer;
 import org.apache.commons.math3.util.Pair;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;

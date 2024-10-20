@@ -27,7 +27,7 @@ public class PrimGenerator implements Generator {
 
         Set<Pair<Integer, Integer>> visited = new HashSet<>();
         // Начальная вершина
-        visited.add(new Pair<>(1, 1));
+        visited.add(new Pair<>(0, 0));
 
         // Создание списка ребер
         List<Pair<Integer, Integer>> edges = new ArrayList<>();

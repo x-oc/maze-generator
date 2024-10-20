@@ -11,5 +11,4 @@ public class Maze {
     private final int width;
     private final Cell[][] grid;
 
-
 }

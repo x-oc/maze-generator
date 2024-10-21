@@ -1,5 +1,8 @@
 package backend.academy;
 
+import backend.academy.models.Cell;
+import backend.academy.models.Coordinate;
+import backend.academy.models.Maze;
 import backend.academy.solvers.BfsSolver;
 import backend.academy.solvers.Solver;
 import org.assertj.core.api.Assertions;

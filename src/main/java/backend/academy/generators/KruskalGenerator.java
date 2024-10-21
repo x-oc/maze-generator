@@ -1,7 +1,7 @@
 package backend.academy.generators;
 
-import backend.academy.Cell;
-import backend.academy.Maze;
+import backend.academy.models.Cell;
+import backend.academy.models.Maze;
 import org.apache.commons.math3.util.Pair;
 import java.util.ArrayList;
 import java.util.Collections;

@@ -2,6 +2,8 @@ package backend.academy;
 
 import backend.academy.generators.Generator;
 import backend.academy.generators.KruskalGenerator;
+import backend.academy.models.Cell;
+import backend.academy.models.Maze;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 

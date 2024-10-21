@@ -1,7 +1,7 @@
 package backend.academy.solvers;
 
-import backend.academy.Coordinate;
-import backend.academy.Maze;
+import backend.academy.models.Coordinate;
+import backend.academy.models.Maze;
 import java.util.List;
 
 public interface Solver {

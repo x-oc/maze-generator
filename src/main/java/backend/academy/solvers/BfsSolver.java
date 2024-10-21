@@ -1,8 +1,8 @@
 package backend.academy.solvers;
 
-import backend.academy.Cell;
-import backend.academy.Coordinate;
-import backend.academy.Maze;
+import backend.academy.models.Cell;
+import backend.academy.models.Coordinate;
+import backend.academy.models.Maze;
 import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
@@ -13,6 +13,10 @@ public class BfsSolver implements Solver {
 
     @Override
     public List<Coordinate> solve(Maze maze, Coordinate start, Coordinate end) {
+
+        start = new Coordinate(start.row() * 2 - 1, start.col() * 2 - 1);
+        end = new Coordinate(end.row() * 2 - 1, end.col() * 2 - 1);
+
         if (maze.grid()[start.row()][start.col()].type() == Cell.Type.WALL ||
             maze.grid()[end.row()][end.col()].type() == Cell.Type.WALL) {
             return Collections.emptyList();
@@ -54,16 +58,16 @@ public class BfsSolver implements Solver {
     private List<Coordinate> getNeighbors(Coordinate coordinate, Maze maze) {
         List<Coordinate> neighbors = new ArrayList<>();
 
-        if (coordinate.row() > 0 && maze.grid()[coordinate.row() - 1][coordinate.col()].type() == Cell.Type.PASSAGE) {
+        if (coordinate.row() > 0 && maze.grid()[coordinate.row() - 1][coordinate.col()].type() != Cell.Type.WALL) {
             neighbors.add(new Coordinate(coordinate.row() - 1, coordinate.col()));
         }
-        if (coordinate.row() < maze.grid().length - 1 && maze.grid()[coordinate.row() + 1][coordinate.col()].type() == Cell.Type.PASSAGE) {
+        if (coordinate.row() < maze.grid().length - 1 && maze.grid()[coordinate.row() + 1][coordinate.col()].type() != Cell.Type.WALL) {
             neighbors.add(new Coordinate(coordinate.row() + 1, coordinate.col()));
         }
-        if (coordinate.col() > 0 && maze.grid()[coordinate.row()][coordinate.col() - 1].type() == Cell.Type.PASSAGE) {
+        if (coordinate.col() > 0 && maze.grid()[coordinate.row()][coordinate.col() - 1].type() != Cell.Type.WALL) {
             neighbors.add(new Coordinate(coordinate.row(), coordinate.col() - 1));
         }
-        if (coordinate.col() < maze.grid()[0].length - 1 && maze.grid()[coordinate.row()][coordinate.col() + 1].type() == Cell.Type.PASSAGE) {
+        if (coordinate.col() < maze.grid()[0].length - 1 && maze.grid()[coordinate.row()][coordinate.col() + 1].type() != Cell.Type.WALL) {
             neighbors.add(new Coordinate(coordinate.row(), coordinate.col() + 1));
         }
 

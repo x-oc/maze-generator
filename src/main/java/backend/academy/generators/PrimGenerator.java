@@ -2,47 +2,24 @@ package backend.academy.generators;
 
 import backend.academy.models.Cell;
 import backend.academy.models.Maze;
-import org.apache.commons.math3.util.Pair;
-import java.util.ArrayList;
+import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
+import org.apache.commons.math3.util.Pair;
 
-public class PrimGenerator implements Generator {
+public class PrimGenerator extends AbstractGenerator {
     @Override
     public Maze generate(int height, int width) {
 
-        Cell[][] grid = new Cell[height * 2 + 1][width * 2 + 1];
-        for (int row = 0; row < height * 2 + 1; row++) {
-            for (int col = 0; col < width * 2 + 1; col++) {
-                if (row % 2 == 1 && col % 2 == 1) {
-                    grid[row][col] = new Cell(row, col, Cell.Type.PASSAGE);
-                } else {
-                    grid[row][col] = new Cell(row, col, Cell.Type.WALL);
-                }
-            }
-        }
+        Cell[][] grid = getEmptyGrid(height * 2 + 1, width * 2 + 1);
 
         Set<Pair<Integer, Integer>> visited = new HashSet<>();
-        // Начальная вершина
-        visited.add(new Pair<>(0, 0));
+        visited.add(new Pair<>(0, 0)); // Начальная вершина
 
-        // Создание списка ребер
-        List<Pair<Integer, Integer>> edges = new ArrayList<>();
-        for (int row = 1; row < height * 2; row += 2) {
-            for (int col = 1; col < width * 2; col += 2) {
-                if (row + 1 < height * 2) {
-                    edges.add(new Pair<>(row + 1, col));
-                }
-                if (col + 1 < width * 2) {
-                    edges.add(new Pair<>(row, col + 1));
-                }
-            }
-        }
-
-        Collections.shuffle(edges, new Random());
+        List<Pair<Integer, Integer>> edges = getEdges(height, width);
+        Collections.shuffle(edges, new SecureRandom());
 
         // Алгоритм Прима
         while (visited.size() < height * width) {
@@ -52,13 +29,15 @@ public class PrimGenerator implements Generator {
                 int row = edge.getFirst();
                 int col = edge.getSecond();
                 if (row % 2 == 0) {
-                    if (visited.contains(new Pair<>((row - 1) / 2, col / 2)) != visited.contains(new Pair<>((row + 1) / 2, col / 2))) {
+                    if (visited.contains(new Pair<>((row - 1) / 2, col / 2))
+                        != visited.contains(new Pair<>((row + 1) / 2, col / 2))) {
                         if (minEdge == null || compareEdges(edge, minEdge, grid, visited)) {
                             minEdge = edge;
                         }
                     }
                 } else {
-                    if (visited.contains(new Pair<>(row / 2, (col - 1) / 2)) != visited.contains(new Pair<>(row / 2, (col + 1) / 2))) {
+                    if (visited.contains(new Pair<>(row / 2, (col - 1) / 2))
+                        != visited.contains(new Pair<>(row / 2, (col + 1) / 2))) {
                         if (minEdge == null || compareEdges(edge, minEdge, grid, visited)) {
                             minEdge = edge;
                         }
@@ -89,7 +68,8 @@ public class PrimGenerator implements Generator {
         return new Maze(height, width, grid);
     }
 
-    private boolean compareEdges(Pair<Integer, Integer> edge1, Pair<Integer, Integer> edge2, Cell[][] grid, Set<Pair<Integer, Integer>> visited) {
+    private boolean compareEdges(Pair<Integer, Integer> edge1, Pair<Integer, Integer> edge2,
+                                    Cell[][] grid, Set<Pair<Integer, Integer>> visited) {
         int row1 = edge1.getFirst();
         int col1 = edge1.getSecond();
         int row2 = edge2.getFirst();

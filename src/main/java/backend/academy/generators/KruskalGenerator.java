@@ -2,30 +2,21 @@ package backend.academy.generators;
 
 import backend.academy.models.Cell;
 import backend.academy.models.Maze;
-import org.apache.commons.math3.util.Pair;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
-import java.util.Random;
+import org.apache.commons.math3.util.Pair;
 
-public class KruskalGenerator implements Generator {
+public class KruskalGenerator extends AbstractGenerator {
 
     @Override
     public Maze generate(int height, int width) {
 
-        Cell[][] grid = new Cell[height * 2 + 1][width * 2 + 1];
-        for (int row = 0; row < height * 2 + 1; row++) {
-            for (int col = 0; col < width * 2 + 1; col++) {
-                if (row % 2 == 1 && col % 2 == 1) {
-                    grid[row][col] = new Cell(row, col, Cell.Type.PASSAGE);
-                } else {
-                    grid[row][col] = new Cell(row, col, Cell.Type.WALL);
-                }
-            }
-        }
+        Cell[][] grid = getEmptyGrid(height * 2 + 1, width * 2 + 1);
 
         Integer[][] ids = new Integer[height][width];
         for (int row = 0; row < height; row++) {
@@ -34,20 +25,8 @@ public class KruskalGenerator implements Generator {
             }
         }
 
-        // Создание списка ребер
-        List<Pair<Integer, Integer>> edges = new ArrayList<>();
-        for (int row = 1; row < height * 2; row += 2) {
-            for (int col = 1; col < width * 2; col += 2) {
-                if (row + 1 < height * 2) {
-                    edges.add(new Pair<>(row + 1, col));
-                }
-                if (col + 1 < width * 2) {
-                    edges.add(new Pair<>(row, col + 1));
-                }
-            }
-        }
-
-        Collections.shuffle(edges, new Random());
+        List<Pair<Integer, Integer>> edges = getEdges(height, width);
+        Collections.shuffle(edges, new SecureRandom());
 
         // Алгоритм Краскала
         for (Pair<Integer, Integer> edge : edges) {
@@ -73,7 +52,7 @@ public class KruskalGenerator implements Generator {
         Integer newId = ids[row1 / 2][col1 / 2];
 
         Queue<Cell> queue = new LinkedList<>(Collections.singletonList(
-            grid[(row1 + row2) / 2][(col1 + col2) / 2]));
+            grid[(row1 + row2) >>> 1][(col1 + col2) >>> 1]));
         while (!queue.isEmpty()) {
             Cell cell = queue.poll();
             grid[cell.row()][cell.col()] = new Cell(cell.row(), cell.col(), Cell.Type.PASSAGE);
@@ -104,11 +83,12 @@ public class KruskalGenerator implements Generator {
                                                     new Pair<>(cell.row() - 2, cell.col()),
                                                     new Pair<>(cell.row(), cell.col() + 2),
                                                     new Pair<>(cell.row(), cell.col() - 2)}) {
-            if (i.getFirst() > 0 && i.getSecond() > 0 &&
-                    i.getFirst() < grid.length - 1 && i.getSecond() < grid[0].length - 1 &&
-                    Objects.equals(ids[i.getFirst() / 2][i.getSecond() / 2], targetId) &&
-                    grid[(i.getFirst() + cell.row()) / 2][(i.getSecond() + cell.col()) / 2].type() == Cell.Type.PASSAGE) {
-                neighbors.add(grid[(i.getFirst() + cell.row()) / 2][(i.getSecond() + cell.col()) / 2]);
+            if (i.getFirst() > 0 && i.getSecond() > 0
+                && i.getFirst() < grid.length - 1 && i.getSecond() < grid[0].length - 1
+                && Objects.equals(ids[i.getFirst() / 2][i.getSecond() / 2], targetId)
+                && grid[(i.getFirst() + cell.row()) >>> 1][(i.getSecond() + cell.col()) >>> 1].type()
+                    == Cell.Type.PASSAGE) {
+                neighbors.add(grid[(i.getFirst() + cell.row()) >>> 1][(i.getSecond() + cell.col()) >>> 1]);
             }
         }
 

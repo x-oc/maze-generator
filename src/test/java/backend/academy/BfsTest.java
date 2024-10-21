@@ -22,7 +22,7 @@ public class BfsTest {
             { new Cell(4, 0, Cell.Type.WALL), new Cell(4, 1, Cell.Type.PASSAGE), new Cell(4, 2, Cell.Type.WALL), new Cell(4, 3, Cell.Type.PASSAGE), new Cell(4, 4, Cell.Type.WALL) }
         });
         Solver solver = new BfsSolver();
-        List<Coordinate> solution = solver.solve(maze, new Coordinate(1, 0), new Coordinate(3, 4));
+        List<Coordinate> solution = solver.solve(maze, new Coordinate(2, 1), new Coordinate(2, 3));
         List<Coordinate> correctSolutiion = Collections.emptyList();
         Assertions.assertThat(solution).isEqualTo(correctSolutiion);
     }

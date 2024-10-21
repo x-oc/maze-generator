@@ -10,6 +10,8 @@ import java.util.List;
 public class GameManager {
 
     private final UserInteraction userInteraction;
+    private final static int MAX_HEIGHT = 100;
+    private final static int MAX_WIDTH = 100;
 
     public GameManager() {
         userInteraction = new UserInteraction();
@@ -19,13 +21,13 @@ public class GameManager {
 
         userInteraction.greet();
 
-        Integer height = userInteraction.getInt("высота", 1, 100);
-        Integer width = userInteraction.getInt("ширина", 1, 100);
+        int height = userInteraction.getInt("высота", 1, MAX_HEIGHT);
+        int width = userInteraction.getInt("ширина", 1, MAX_WIDTH);
 
-        Integer startX = userInteraction.getInt("координата x начала лабиринта", 1, width);
-        Integer startY = userInteraction.getInt("координата y начала лабиринта", 1, height);
-        Integer finishX = userInteraction.getInt("координата x конца лабиринта", 1, width);
-        Integer finishY = userInteraction.getInt("координата y конца лабиринта", 1, height);
+        int startX = userInteraction.getInt("координата x начала лабиринта", 1, width);
+        int startY = userInteraction.getInt("координата y начала лабиринта", 1, height);
+        int finishX = userInteraction.getInt("координата x конца лабиринта", 1, width);
+        int finishY = userInteraction.getInt("координата y конца лабиринта", 1, height);
         Coordinate start = new Coordinate(startY, startX);
         Coordinate finish = new Coordinate(finishY, finishX);
 

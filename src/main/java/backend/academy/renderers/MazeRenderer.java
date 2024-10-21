@@ -3,24 +3,18 @@ package backend.academy.renderers;
 import backend.academy.models.Cell;
 import backend.academy.models.Coordinate;
 import backend.academy.models.Maze;
-
 import java.util.List;
 
 public class MazeRenderer implements Renderer {
     @Override
     public String render(Maze maze) {
         StringBuilder sb = new StringBuilder();
-        for (int row = 0; row < maze.grid().length; row++) {
-            for (int col = 0; col < maze.grid()[0].length; col++) {
+        for (int row = 0; row < maze.height() * 2 + 1; row++) {
+            for (int col = 0; col < maze.width() * 2 + 1; col++) {
                 Cell.Type type = maze.grid()[row][col].type();
-                if (type == Cell.Type.WALL) sb.append("#");
-                else if (type == Cell.Type.PASSAGE) sb.append(" ");
-                else if (type == Cell.Type.COIN) sb.append("o");
-                else if (type == Cell.Type.SAND) sb.append("~");
-                else if (type == Cell.Type.START) sb.append("S");
-                else if (type == Cell.Type.FINISH) sb.append("F");
+                sb.append(getChar(type));
             }
-            sb.append("\n");
+            sb.append('\n');
         }
         return sb.toString();
     }
@@ -28,19 +22,35 @@ public class MazeRenderer implements Renderer {
     @Override
     public String render(Maze maze, List<Coordinate> path) {
         StringBuilder sb = new StringBuilder();
-        for (int row = 0; row < maze.grid().length; row++) {
-            for (int col = 0; col < maze.grid()[0].length; col++) {
+        for (int row = 0; row < maze.height() * 2 + 1; row++) {
+            for (int col = 0; col < maze.width() * 2 + 1; col++) {
                 Cell.Type type = maze.grid()[row][col].type();
-                if (path.contains(new Coordinate(row, col))) sb.append("+"); // Используем "+" для обозначения пути
-                else if (type == Cell.Type.WALL) sb.append("#");
-                else if (type == Cell.Type.PASSAGE) sb.append(" ");
-                else if (type == Cell.Type.COIN) sb.append("o");
-                else if (type == Cell.Type.SAND) sb.append("~");
-                else if (type == Cell.Type.START) sb.append("S");
-                else if (type == Cell.Type.FINISH) sb.append("F");
+                if (path.contains(new Coordinate(row, col))) {
+                    sb.append('.'); // Используем '.' для обозначения пути
+                } else {
+                    sb.append(getChar(type));
+                }
             }
-            sb.append("\n");
+            sb.append('\n');
         }
         return sb.toString();
+    }
+
+    private char getChar(Cell.Type type) {
+        char ans = '-';
+        if (type == Cell.Type.WALL) {
+            ans = '#';
+        } else if (type == Cell.Type.PASSAGE) {
+            ans = ' ';
+        } else if (type == Cell.Type.COIN) {
+            ans = 'o';
+        } else if (type == Cell.Type.SAND) {
+            ans = '~';
+        } else if (type == Cell.Type.START) {
+            ans = 'S';
+        } else if (type == Cell.Type.FINISH) {
+            ans = 'F';
+        }
+        return ans;
     }
 }

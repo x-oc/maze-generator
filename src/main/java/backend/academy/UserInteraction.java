@@ -43,16 +43,16 @@ public class UserInteraction {
     }
 
     public void greet() {
-        println("Привет! Это программа для построения лабиринтов и нахождения пути в них. " +
-            "Вам нужно задать размеры лабиринта и алгоритмы для его построения и нахождения пути.");
+        println("Привет! Это программа для построения лабиринтов и нахождения пути в них. "
+            + "Вам нужно задать размеры лабиринта и алгоритмы для его построения и нахождения пути.");
     }
 
-    public Integer getInt(String name, int min, int max) {
+    public int getInt(String name, int min, int max) {
         String intPrompt = "Укажите значение \"%s\" (от %d до %d): ";
         String intPromptError = "Некорректное значение. Укажите значение \"%s\" (от %d до %d): ";
         String userInput = requestParameter(String.format(intPrompt, name, min, max));
-        while (userInput == null || !Pattern.compile("^[1-9]\\d*$").matcher(userInput).matches() ||
-                Integer.parseInt(userInput) < min || Integer.parseInt(userInput) > max) {
+        while (userInput == null || !Pattern.compile("^[1-9]\\d*$").matcher(userInput).matches()
+            || Integer.parseInt(userInput) < min || Integer.parseInt(userInput) > max) {
             userInput = requestParameter(String.format(intPromptError, name, min, max));
         }
         return Integer.parseInt(userInput);
@@ -70,24 +70,27 @@ public class UserInteraction {
     }
 
     public Generator getGenerator() {
-        List<String> values = Arrays.asList("Kruskal", "Prim");
+        final String Kruskal = "Kruskal";
+        final String Prim = "Prim";
+        List<String> values = Arrays.asList(Kruskal, Prim);
         String algorithm = getAlgorithm("построения лабиринта", values);
         return switch (algorithm) {
-            case "Kruskal" -> new KruskalGenerator();
-            case "Prim" -> new PrimGenerator();
+            case Kruskal -> new KruskalGenerator();
+            case Prim -> new PrimGenerator();
             // ... другие классы генераторов
             default -> null;
         };
     }
 
     public Solver getSolver() {
-        List<String> values = Arrays.asList("Bfs", "Dfs");
+        final String Bfs = "Bfs";
+        final String Dfs = "Dfs";
+        List<String> values = Arrays.asList(Bfs, Dfs);
         String algorithm = getAlgorithm("нахождения пути в лабиринте", values);
         return switch (algorithm) {
-            case "Bfs" -> new BfsSolver();
-            case "Dfs" -> new DfsSolver();
+            case Bfs -> new BfsSolver();
+            case Dfs -> new DfsSolver();
             default -> null;
         };
     }
-
 }

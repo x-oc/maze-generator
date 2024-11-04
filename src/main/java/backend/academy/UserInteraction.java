@@ -1,6 +1,6 @@
 package backend.academy;
 
-import backend.academy.generators.Generator;
+import backend.academy.generators.MazeGenerator;
 import backend.academy.generators.KruskalGenerator;
 import backend.academy.generators.PrimGenerator;
 import backend.academy.models.Coordinate;
@@ -69,7 +69,7 @@ public class UserInteraction {
         return userInput;
     }
 
-    public Generator getGenerator() {
+    public MazeGenerator getGenerator() {
         final String Kruskal = "Kruskal";
         final String Prim = "Prim";
         List<String> values = Arrays.asList(Kruskal, Prim);

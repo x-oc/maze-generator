@@ -1,6 +1,6 @@
 package backend.academy;
 
-import backend.academy.generators.Generator;
+import backend.academy.generators.MazeGenerator;
 import backend.academy.generators.KruskalGenerator;
 import backend.academy.models.Cell;
 import backend.academy.models.Maze;
@@ -11,7 +11,7 @@ public class KruskalTest {
 
     @Test
     void generate() {
-        final Generator generator = new KruskalGenerator();
+        final MazeGenerator generator = new KruskalGenerator();
         Maze maze = generator.generate(1, 2);
         Maze correctMaze = new Maze(3, 5, new Cell[][]{new Cell[]{new Cell(0, 0, Cell.Type.WALL), new Cell(0, 1, Cell.Type.WALL), new Cell(0, 2, Cell.Type.WALL), new Cell(0, 3, Cell.Type.WALL), new Cell(0, 4, Cell.Type.WALL)},
             new Cell[]{new Cell(1, 0, Cell.Type.WALL), new Cell(1, 1, Cell.Type.PASSAGE), new Cell(1, 2, Cell.Type.PASSAGE), new Cell(1, 3, Cell.Type.PASSAGE), new Cell(1, 4, Cell.Type.WALL)},

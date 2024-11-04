@@ -1,6 +1,6 @@
 package backend.academy;
 
-import backend.academy.generators.Generator;
+import backend.academy.generators.MazeGenerator;
 import backend.academy.models.Cell;
 import backend.academy.models.Coordinate;
 import backend.academy.models.Maze;
@@ -31,7 +31,7 @@ public class GameManager {
         Coordinate start = new Coordinate(startY, startX);
         Coordinate finish = new Coordinate(finishY, finishX);
 
-        Generator generator = userInteraction.getGenerator();
+        MazeGenerator generator = userInteraction.getGenerator();
         Maze maze = generator.generate(height, width);
         Cell[][] grid = maze.grid();
         grid[startY * 2 - 1][startX * 2 - 1] = new Cell(startY * 2 - 1, startX * 2 - 1, Cell.Type.START);

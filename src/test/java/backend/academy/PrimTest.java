@@ -1,6 +1,6 @@
 package backend.academy;
 
-import backend.academy.generators.Generator;
+import backend.academy.generators.MazeGenerator;
 import backend.academy.generators.PrimGenerator;
 import backend.academy.models.Cell;
 import backend.academy.models.Maze;
@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class PrimTest {
     @Test
     void generate() {
-        final Generator generator = new PrimGenerator();
+        final MazeGenerator generator = new PrimGenerator();
         Maze maze = generator.generate(1, 2);
         Maze correctMaze = new Maze(3, 5, new Cell[][]{new Cell[]{new Cell(0, 0, Cell.Type.WALL), new Cell(0, 1, Cell.Type.WALL), new Cell(0, 2, Cell.Type.WALL), new Cell(0, 3, Cell.Type.WALL), new Cell(0, 4, Cell.Type.WALL)},
             new Cell[]{new Cell(1, 0, Cell.Type.WALL), new Cell(1, 1, Cell.Type.PASSAGE), new Cell(1, 2, Cell.Type.PASSAGE), new Cell(1, 3, Cell.Type.PASSAGE), new Cell(1, 4, Cell.Type.WALL)},

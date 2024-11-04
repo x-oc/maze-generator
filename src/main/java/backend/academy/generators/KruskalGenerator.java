@@ -47,12 +47,12 @@ public class KruskalGenerator extends AbstractGenerator {
         return new Maze(height, width, grid);
     }
 
-    private void join(int row1, int row2, int col1, int col2, Cell[][] grid, int[][] ids) {
-        int targetId = ids[row2 / 2][col2 / 2];
-        int newId = ids[row1 / 2][col1 / 2];
+    private void join(int rowUpper, int rowLower, int colLeft, int colRight, Cell[][] grid, int[][] ids) {
+        int targetId = ids[rowLower / 2][colRight / 2];
+        int newId = ids[rowUpper / 2][colLeft / 2];
 
         Queue<Cell> queue = new LinkedList<>(Collections.singletonList(
-            grid[(row1 + row2) >>> 1][(col1 + col2) >>> 1]));
+            grid[(rowUpper + rowLower) >>> 1][(colLeft + colRight) >>> 1]));
         while (!queue.isEmpty()) {
             Cell cell = queue.poll();
             grid[cell.row()][cell.col()] = new Cell(cell.row(), cell.col(), Cell.Type.PASSAGE);

@@ -75,36 +75,28 @@ public class PrimGenerator extends AbstractGenerator {
         int row2 = edge2.getFirst();
         int col2 = edge2.getSecond();
 
-        int neighbors1;
-        int neighbors2;
         // Выбор ребра с наименьшим количеством соседей у посещенных вершин
-        if (row1 % 2 == 0) {
-            if (visited.contains(new Pair<>((row1 - 1) / 2, col1 / 2))) {
-                neighbors1 = countNeighbors(grid[row1 - 1][col1], grid, visited);
-            } else {
-                neighbors1 = countNeighbors(grid[row1 + 1][col1], grid, visited);
-            }
-        } else {
-            if (visited.contains(new Pair<>(row1 / 2, (col1 - 1) / 2))) {
-                neighbors1 = countNeighbors(grid[row1][col1 - 1], grid, visited);
-            } else {
-                neighbors1 = countNeighbors(grid[row1][col1 + 1], grid, visited);
-            }
-        }
-        if (row2 % 2 == 0) {
-            if (visited.contains(new Pair<>((row2 - 1) / 2, col2 / 2))) {
-                neighbors2 = countNeighbors(grid[row2 - 1][col2], grid, visited);
-            } else {
-                neighbors2 = countNeighbors(grid[row2 + 1][col2], grid, visited);
-            }
-        } else {
-            if (visited.contains(new Pair<>(row2 / 2, (col2 - 1) / 2))) {
-                neighbors2 = countNeighbors(grid[row2][col2 - 1], grid, visited);
-            } else {
-                neighbors2 = countNeighbors(grid[row2][col2 + 1], grid, visited);
-            }
-        }
+        int neighbors1 = getNeighbors(grid, visited, row1, col1);
+        int neighbors2 = getNeighbors(grid, visited, row2, col2);
         return neighbors1 < neighbors2;
+    }
+
+    private int getNeighbors(Cell[][] grid, Set<Pair<Integer, Integer>> visited, int row, int col) {
+        int neighbors1;
+        if (row % 2 == 0) {
+            if (visited.contains(new Pair<>((row - 1) / 2, col / 2))) {
+                neighbors1 = countNeighbors(grid[row - 1][col], grid, visited);
+            } else {
+                neighbors1 = countNeighbors(grid[row + 1][col], grid, visited);
+            }
+        } else {
+            if (visited.contains(new Pair<>(row / 2, (col - 1) / 2))) {
+                neighbors1 = countNeighbors(grid[row][col - 1], grid, visited);
+            } else {
+                neighbors1 = countNeighbors(grid[row][col + 1], grid, visited);
+            }
+        }
+        return neighbors1;
     }
 
     private int countNeighbors(Cell cell, Cell[][] grid, Set<Pair<Integer, Integer>> visited) {

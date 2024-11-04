@@ -18,7 +18,7 @@ public class KruskalGenerator extends AbstractGenerator {
 
         Cell[][] grid = createEmptyGrid(height * 2 + 1, width * 2 + 1);
 
-        Integer[][] ids = new Integer[height][width];
+        int[][] ids = new int[height][width];
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
                 ids[row][col] = (Math.max(height, width) * 2 + 1) * row + col;
@@ -47,9 +47,9 @@ public class KruskalGenerator extends AbstractGenerator {
         return new Maze(height, width, grid);
     }
 
-    private void join(int row1, int row2, int col1, int col2, Cell[][] grid, Integer[][] ids) {
-        Integer targetId = ids[row2 / 2][col2 / 2];
-        Integer newId = ids[row1 / 2][col1 / 2];
+    private void join(int row1, int row2, int col1, int col2, Cell[][] grid, int[][] ids) {
+        int targetId = ids[row2 / 2][col2 / 2];
+        int newId = ids[row1 / 2][col1 / 2];
 
         Queue<Cell> queue = new LinkedList<>(Collections.singletonList(
             grid[(row1 + row2) >>> 1][(col1 + col2) >>> 1]));
@@ -76,7 +76,7 @@ public class KruskalGenerator extends AbstractGenerator {
         }
     }
 
-    private List<Cell> getNeighbors(Cell cell, int targetId, Cell[][] grid, Integer[][] ids) {
+    private List<Cell> getNeighbors(Cell cell, int targetId, Cell[][] grid, int[][] ids) {
         List<Cell> neighbors = new ArrayList<>();
 
         for (Pair<Integer, Integer> i : new Pair[] {new Pair<>(cell.row() + 2, cell.col()),

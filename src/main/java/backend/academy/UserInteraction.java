@@ -1,8 +1,8 @@
 package backend.academy;
 
+import backend.academy.generators.MazeGenerator;
 import backend.academy.generators.MazeGeneratorFactory;
 import backend.academy.generators.MazeGeneratorType;
-import backend.academy.generators.MazeGenerator;
 import backend.academy.models.Coordinate;
 import backend.academy.models.Maze;
 import backend.academy.renderers.MazeRenderer;

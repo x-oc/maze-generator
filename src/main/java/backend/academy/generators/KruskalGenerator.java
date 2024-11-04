@@ -85,15 +85,23 @@ public class KruskalGenerator extends AbstractGenerator {
                                                     new Coordinate(cell.row(), cell.col() - 2)};
 
         for (Coordinate i : neighbors) {
-            if (i.row() > 0 && i.col() > 0
-                && i.row() < grid.length - 1 && i.col() < grid[0].length - 1
-                && Objects.equals(ids[i.row() / 2][i.col() / 2], targetId)
-                && grid[(i.row() + cell.row()) >>> 1][(i.col() + cell.col()) >>> 1].type()
-                    != Cell.Type.WALL) {
+            if (isEdgeInGrid(grid, i) && areIdsEqual(ids, i, targetId) && isTherePassage(grid, i, cell)) {
                 rightNeighbors.add(grid[(i.row() + cell.row()) >>> 1][(i.col() + cell.col()) >>> 1]);
             }
         }
 
         return rightNeighbors;
+    }
+
+    private static boolean isEdgeInGrid(Cell[][] grid, Coordinate edge) {
+        return edge.row() > 0 && edge.col() > 0 && edge.row() < grid.length - 1 && edge.col() < grid[0].length - 1;
+    }
+
+    private static boolean areIdsEqual(int[][] ids, Coordinate edge, int id) {
+        return Objects.equals(ids[edge.row() / 2][edge.col() / 2], id);
+    }
+
+    private static boolean isTherePassage(Cell[][] grid, Coordinate edge, Cell cell) {
+        return grid[(edge.row() + cell.row()) >>> 1][(edge.col() + cell.col()) >>> 1].type() != Cell.Type.WALL;
     }
 }

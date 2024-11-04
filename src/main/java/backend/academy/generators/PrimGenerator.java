@@ -23,42 +23,9 @@ public class PrimGenerator extends AbstractGenerator {
 
         // Алгоритм Прима
         while (visited.size() < height * width) {
-            // Найти ребро с минимальным весом, соединяющее посещенную вершину с непосещенной
-            Coordinate minEdge = null;
-            for (Coordinate edge : edges) {
-                int row = edge.row();
-                int col = edge.col();
-                if (row % 2 == 0) {
-                    if (visited.contains(new Coordinate((row - 1) / 2, col / 2))
-                        != visited.contains(new Coordinate((row + 1) / 2, col / 2))) {
-                        if (minEdge == null || compareEdges(edge, minEdge, grid, visited)) {
-                            minEdge = edge;
-                        }
-                    }
-                } else {
-                    if (visited.contains(new Coordinate(row / 2, (col - 1) / 2))
-                        != visited.contains(new Coordinate(row / 2, (col + 1) / 2))) {
-                        if (minEdge == null || compareEdges(edge, minEdge, grid, visited)) {
-                            minEdge = edge;
-                        }
-                    }
-                }
-            }
-
-            // Добавить новое ребро в лабиринт
-            if (minEdge != null) {
-                int row = minEdge.row();
-                int col = minEdge.col();
-                if (row % 2 == 0) {
-                    grid[row][col] = new Cell(row, col, Cell.Type.PASSAGE);
-                    visited.add(new Coordinate((row + 1) / 2, col / 2));
-                    visited.add(new Coordinate((row - 1) / 2, col / 2));
-                } else {
-                    grid[row][col] = new Cell(row, col, Cell.Type.PASSAGE);
-                    visited.add(new Coordinate(row / 2, (col + 1) / 2));
-                    visited.add(new Coordinate(row / 2, (col - 1) / 2));
-                }
-                edges.remove(minEdge);
+            Coordinate min = findMinWeightEdge(edges, visited, grid);
+            if (min != null) {
+                addNewEdge(min, grid, visited, edges);
             } else {
                 // Если нет ребер, соединяющих посещенные и непосещенные вершины, то лабиринт сгенерирован
                 break;
@@ -66,6 +33,47 @@ public class PrimGenerator extends AbstractGenerator {
         }
 
         return new Maze(height, width, grid);
+    }
+
+    // Найти ребро с минимальным весом, соединяющее посещенную вершину с непосещенной
+    private Coordinate findMinWeightEdge(List<Coordinate> edges, Set<Coordinate> visited, Cell[][] grid) {
+        Coordinate minEdge = null;
+        for (Coordinate edge : edges) {
+            int row = edge.row();
+            int col = edge.col();
+            if (row % 2 == 0) {
+                if (visited.contains(new Coordinate((row - 1) / 2, col / 2))
+                    != visited.contains(new Coordinate((row + 1) / 2, col / 2))) {
+                    if (minEdge == null || compareEdges(edge, minEdge, grid, visited)) {
+                        minEdge = edge;
+                    }
+                }
+            } else {
+                if (visited.contains(new Coordinate(row / 2, (col - 1) / 2))
+                    != visited.contains(new Coordinate(row / 2, (col + 1) / 2))) {
+                    if (minEdge == null || compareEdges(edge, minEdge, grid, visited)) {
+                        minEdge = edge;
+                    }
+                }
+            }
+        }
+        return minEdge;
+    }
+
+    // Добавить новое ребро в лабиринт
+    private void addNewEdge(Coordinate edge, Cell[][] grid, Set<Coordinate> visited, List<Coordinate> edges) {
+        int row = edge.row();
+        int col = edge.col();
+        if (row % 2 == 0) {
+            grid[row][col] = new Cell(row, col, Cell.Type.PASSAGE);
+            visited.add(new Coordinate((row + 1) / 2, col / 2));
+            visited.add(new Coordinate((row - 1) / 2, col / 2));
+        } else {
+            grid[row][col] = new Cell(row, col, Cell.Type.PASSAGE);
+            visited.add(new Coordinate(row / 2, (col + 1) / 2));
+            visited.add(new Coordinate(row / 2, (col - 1) / 2));
+        }
+        edges.remove(edge);
     }
 
     private boolean compareEdges(Coordinate edge1, Coordinate edge2,

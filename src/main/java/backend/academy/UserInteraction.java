@@ -1,18 +1,17 @@
 package backend.academy;
 
-import backend.academy.generators.KruskalGenerator;
+import backend.academy.generators.MazeGeneratorFactory;
+import backend.academy.generators.MazeGeneratorType;
 import backend.academy.generators.MazeGenerator;
-import backend.academy.generators.PrimGenerator;
 import backend.academy.models.Coordinate;
 import backend.academy.models.Maze;
 import backend.academy.renderers.MazeRenderer;
 import backend.academy.renderers.Renderer;
-import backend.academy.solvers.BfsSolver;
-import backend.academy.solvers.DfsSolver;
 import backend.academy.solvers.Solver;
+import backend.academy.solvers.SolverFactory;
+import backend.academy.solvers.SolverType;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -70,27 +69,14 @@ public class UserInteraction {
     }
 
     public MazeGenerator getGenerator() {
-        final String Kruskal = "Kruskal";
-        final String Prim = "Prim";
-        List<String> values = Arrays.asList(Kruskal, Prim);
+        List<String> values = MazeGeneratorType.getAllNames();
         String algorithm = getAlgorithm("построения лабиринта", values);
-        return switch (algorithm) {
-            case Kruskal -> new KruskalGenerator();
-            case Prim -> new PrimGenerator();
-            // ... другие классы генераторов
-            default -> null;
-        };
+        return MazeGeneratorFactory.createGenerator(MazeGeneratorType.valueOf(algorithm.toUpperCase()));
     }
 
     public Solver getSolver() {
-        final String Bfs = "Bfs";
-        final String Dfs = "Dfs";
-        List<String> values = Arrays.asList(Bfs, Dfs);
+        List<String> values = SolverType.getAllNames();
         String algorithm = getAlgorithm("нахождения пути в лабиринте", values);
-        return switch (algorithm) {
-            case Bfs -> new BfsSolver();
-            case Dfs -> new DfsSolver();
-            default -> null;
-        };
+        return SolverFactory.createSolver(SolverType.valueOf(algorithm.toUpperCase()));
     }
 }

@@ -36,7 +36,6 @@ public class GameManager {
         Cell[][] grid = maze.grid();
         grid[startY * 2 - 1][startX * 2 - 1] = new Cell(startY * 2 - 1, startX * 2 - 1, Cell.Type.START);
         grid[finishY * 2 - 1][finishX * 2 - 1] = new Cell(finishY * 2 - 1, finishX * 2 - 1, Cell.Type.FINISH);
-        maze.grid(grid);
 
         userInteraction.showMaze(maze);
 

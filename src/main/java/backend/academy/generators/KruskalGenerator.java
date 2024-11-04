@@ -16,7 +16,7 @@ public class KruskalGenerator extends AbstractGenerator {
     @Override
     public Maze generate(int height, int width) {
 
-        Cell[][] grid = getEmptyGrid(height * 2 + 1, width * 2 + 1);
+        Cell[][] grid = createEmptyGrid(height * 2 + 1, width * 2 + 1);
 
         Integer[][] ids = new Integer[height][width];
         for (int row = 0; row < height; row++) {

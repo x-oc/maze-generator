@@ -13,7 +13,7 @@ public class PrimGenerator extends AbstractGenerator {
     @Override
     public Maze generate(int height, int width) {
 
-        Cell[][] grid = getEmptyGrid(height * 2 + 1, width * 2 + 1);
+        Cell[][] grid = createEmptyGrid(height * 2 + 1, width * 2 + 1);
 
         Set<Pair<Integer, Integer>> visited = new HashSet<>();
         visited.add(new Pair<>(0, 0)); // Начальная вершина

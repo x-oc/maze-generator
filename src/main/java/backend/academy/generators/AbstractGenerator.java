@@ -7,7 +7,7 @@ import org.apache.commons.math3.util.Pair;
 
 public abstract class AbstractGenerator implements Generator {
 
-    protected Cell[][] getEmptyGrid(int height, int width) {
+    protected Cell[][] createEmptyGrid(int height, int width) {
         Cell[][] grid = new Cell[height][width];
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {

@@ -1,7 +1,7 @@
 package backend.academy;
 
-import backend.academy.generators.MazeGenerator;
 import backend.academy.generators.KruskalGenerator;
+import backend.academy.generators.MazeGenerator;
 import backend.academy.generators.PrimGenerator;
 import backend.academy.models.Coordinate;
 import backend.academy.models.Maze;

@@ -1,13 +1,13 @@
 package backend.academy.generators;
 
 import backend.academy.models.Cell;
+import backend.academy.models.Coordinate;
 import backend.academy.models.Maze;
 import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.apache.commons.math3.util.Pair;
 
 public class PrimGenerator extends AbstractGenerator {
     @Override
@@ -15,29 +15,29 @@ public class PrimGenerator extends AbstractGenerator {
 
         Cell[][] grid = createEmptyGrid(height * 2 + 1, width * 2 + 1);
 
-        Set<Pair<Integer, Integer>> visited = new HashSet<>();
-        visited.add(new Pair<>(0, 0)); // Начальная вершина
+        Set<Coordinate> visited = new HashSet<>();
+        visited.add(new Coordinate(0, 0)); // Начальная вершина
 
-        List<Pair<Integer, Integer>> edges = getEdges(height, width);
+        List<Coordinate> edges = getEdges(height, width);
         Collections.shuffle(edges, new SecureRandom());
 
         // Алгоритм Прима
         while (visited.size() < height * width) {
             // Найти ребро с минимальным весом, соединяющее посещенную вершину с непосещенной
-            Pair<Integer, Integer> minEdge = null;
-            for (Pair<Integer, Integer> edge : edges) {
-                int row = edge.getFirst();
-                int col = edge.getSecond();
+            Coordinate minEdge = null;
+            for (Coordinate edge : edges) {
+                int row = edge.row();
+                int col = edge.col();
                 if (row % 2 == 0) {
-                    if (visited.contains(new Pair<>((row - 1) / 2, col / 2))
-                        != visited.contains(new Pair<>((row + 1) / 2, col / 2))) {
+                    if (visited.contains(new Coordinate((row - 1) / 2, col / 2))
+                        != visited.contains(new Coordinate((row + 1) / 2, col / 2))) {
                         if (minEdge == null || compareEdges(edge, minEdge, grid, visited)) {
                             minEdge = edge;
                         }
                     }
                 } else {
-                    if (visited.contains(new Pair<>(row / 2, (col - 1) / 2))
-                        != visited.contains(new Pair<>(row / 2, (col + 1) / 2))) {
+                    if (visited.contains(new Coordinate(row / 2, (col - 1) / 2))
+                        != visited.contains(new Coordinate(row / 2, (col + 1) / 2))) {
                         if (minEdge == null || compareEdges(edge, minEdge, grid, visited)) {
                             minEdge = edge;
                         }
@@ -47,16 +47,16 @@ public class PrimGenerator extends AbstractGenerator {
 
             // Добавить новое ребро в лабиринт
             if (minEdge != null) {
-                int row = minEdge.getFirst();
-                int col = minEdge.getSecond();
+                int row = minEdge.row();
+                int col = minEdge.col();
                 if (row % 2 == 0) {
                     grid[row][col] = new Cell(row, col, Cell.Type.PASSAGE);
-                    visited.add(new Pair<>((row + 1) / 2, col / 2));
-                    visited.add(new Pair<>((row - 1) / 2, col / 2));
+                    visited.add(new Coordinate((row + 1) / 2, col / 2));
+                    visited.add(new Coordinate((row - 1) / 2, col / 2));
                 } else {
                     grid[row][col] = new Cell(row, col, Cell.Type.PASSAGE);
-                    visited.add(new Pair<>(row / 2, (col + 1) / 2));
-                    visited.add(new Pair<>(row / 2, (col - 1) / 2));
+                    visited.add(new Coordinate(row / 2, (col + 1) / 2));
+                    visited.add(new Coordinate(row / 2, (col - 1) / 2));
                 }
                 edges.remove(minEdge);
             } else {
@@ -68,12 +68,12 @@ public class PrimGenerator extends AbstractGenerator {
         return new Maze(height, width, grid);
     }
 
-    private boolean compareEdges(Pair<Integer, Integer> edge1, Pair<Integer, Integer> edge2,
-                                    Cell[][] grid, Set<Pair<Integer, Integer>> visited) {
-        int row1 = edge1.getFirst();
-        int col1 = edge1.getSecond();
-        int row2 = edge2.getFirst();
-        int col2 = edge2.getSecond();
+    private boolean compareEdges(Coordinate edge1, Coordinate edge2,
+                                    Cell[][] grid, Set<Coordinate> visited) {
+        int row1 = edge1.row();
+        int col1 = edge1.col();
+        int row2 = edge2.row();
+        int col2 = edge2.col();
 
         // Выбор ребра с наименьшим количеством соседей у посещенных вершин
         int neighbors1 = getNeighbors(grid, visited, row1, col1);
@@ -81,16 +81,16 @@ public class PrimGenerator extends AbstractGenerator {
         return neighbors1 < neighbors2;
     }
 
-    private int getNeighbors(Cell[][] grid, Set<Pair<Integer, Integer>> visited, int row, int col) {
+    private int getNeighbors(Cell[][] grid, Set<Coordinate> visited, int row, int col) {
         int neighbors1;
         if (row % 2 == 0) {
-            if (visited.contains(new Pair<>((row - 1) / 2, col / 2))) {
+            if (visited.contains(new Coordinate((row - 1) / 2, col / 2))) {
                 neighbors1 = countNeighbors(grid[row - 1][col], grid, visited);
             } else {
                 neighbors1 = countNeighbors(grid[row + 1][col], grid, visited);
             }
         } else {
-            if (visited.contains(new Pair<>(row / 2, (col - 1) / 2))) {
+            if (visited.contains(new Coordinate(row / 2, (col - 1) / 2))) {
                 neighbors1 = countNeighbors(grid[row][col - 1], grid, visited);
             } else {
                 neighbors1 = countNeighbors(grid[row][col + 1], grid, visited);
@@ -99,18 +99,20 @@ public class PrimGenerator extends AbstractGenerator {
         return neighbors1;
     }
 
-    private int countNeighbors(Cell cell, Cell[][] grid, Set<Pair<Integer, Integer>> visited) {
+    private int countNeighbors(Cell cell, Cell[][] grid, Set<Coordinate> visited) {
         int count = 0;
-        if (cell.row() + 2 < grid.length - 1 && visited.contains(new Pair<>((cell.row() + 2) / 2, cell.col() / 2))) {
+        if (cell.row() + 2 < grid.length - 1 && visited.contains(
+                new Coordinate((cell.row() + 2) / 2, cell.col() / 2))) {
             count++;
         }
-        if (cell.row() - 2 > 0 && visited.contains(new Pair<>((cell.row() - 2) / 2, cell.col() / 2))) {
+        if (cell.row() - 2 > 0 && visited.contains(new Coordinate((cell.row() - 2) / 2, cell.col() / 2))) {
             count++;
         }
-        if (cell.col() + 2 < grid[0].length - 1 && visited.contains(new Pair<>(cell.row() / 2, (cell.col() + 2) / 2))) {
+        if (cell.col() + 2 < grid[0].length - 1 && visited.contains(
+                new Coordinate(cell.row() / 2, (cell.col() + 2) / 2))) {
             count++;
         }
-        if (cell.col() - 2 > 0 && visited.contains(new Pair<>(cell.row() / 2, (cell.col() - 2) / 2))) {
+        if (cell.col() - 2 > 0 && visited.contains(new Coordinate(cell.row() / 2, (cell.col() - 2) / 2))) {
             count++;
         }
         return count;

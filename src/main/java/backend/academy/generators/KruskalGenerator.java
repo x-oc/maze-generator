@@ -1,6 +1,7 @@
 package backend.academy.generators;
 
 import backend.academy.models.Cell;
+import backend.academy.models.Coordinate;
 import backend.academy.models.Maze;
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -9,7 +10,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
-import org.apache.commons.math3.util.Pair;
 
 public class KruskalGenerator extends AbstractGenerator {
 
@@ -25,14 +25,14 @@ public class KruskalGenerator extends AbstractGenerator {
             }
         }
 
-        List<Pair<Integer, Integer>> edges = getEdges(height, width);
+        List<Coordinate> edges = getEdges(height, width);
         Collections.shuffle(edges, new SecureRandom());
 
         // Алгоритм Краскала
-        for (Pair<Integer, Integer> edge : edges) {
+        for (Coordinate edge : edges) {
 
-            int row = edge.getFirst();
-            int col = edge.getSecond();
+            int row = edge.row();
+            int col = edge.col();
             if (row % 2 == 0) {
                 if (!Objects.equals(ids[(row - 1) / 2][col / 2], ids[(row + 1) / 2][col / 2])) {
                     join(row - 1, row + 1, col, col, grid, ids);
@@ -77,21 +77,23 @@ public class KruskalGenerator extends AbstractGenerator {
     }
 
     private List<Cell> getNeighbors(Cell cell, int targetId, Cell[][] grid, int[][] ids) {
-        List<Cell> neighbors = new ArrayList<>();
+        List<Cell> rightNeighbors = new ArrayList<>();
 
-        for (Pair<Integer, Integer> i : new Pair[] {new Pair<>(cell.row() + 2, cell.col()),
-                                                    new Pair<>(cell.row() - 2, cell.col()),
-                                                    new Pair<>(cell.row(), cell.col() + 2),
-                                                    new Pair<>(cell.row(), cell.col() - 2)}) {
-            if (i.getFirst() > 0 && i.getSecond() > 0
-                && i.getFirst() < grid.length - 1 && i.getSecond() < grid[0].length - 1
-                && Objects.equals(ids[i.getFirst() / 2][i.getSecond() / 2], targetId)
-                && grid[(i.getFirst() + cell.row()) >>> 1][(i.getSecond() + cell.col()) >>> 1].type()
-                    == Cell.Type.PASSAGE) {
-                neighbors.add(grid[(i.getFirst() + cell.row()) >>> 1][(i.getSecond() + cell.col()) >>> 1]);
+        Coordinate[] neighbors = new Coordinate[]  {new Coordinate(cell.row() + 2, cell.col()),
+                                                    new Coordinate(cell.row() - 2, cell.col()),
+                                                    new Coordinate(cell.row(), cell.col() + 2),
+                                                    new Coordinate(cell.row(), cell.col() - 2)};
+
+        for (Coordinate i : neighbors) {
+            if (i.row() > 0 && i.col() > 0
+                && i.row() < grid.length - 1 && i.col() < grid[0].length - 1
+                && Objects.equals(ids[i.row() / 2][i.col() / 2], targetId)
+                && grid[(i.row() + cell.row()) >>> 1][(i.col() + cell.col()) >>> 1].type()
+                    != Cell.Type.WALL) {
+                rightNeighbors.add(grid[(i.row() + cell.row()) >>> 1][(i.col() + cell.col()) >>> 1]);
             }
         }
 
-        return neighbors;
+        return rightNeighbors;
     }
 }
